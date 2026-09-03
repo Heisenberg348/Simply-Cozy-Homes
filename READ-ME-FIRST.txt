@@ -1,0 +1,163 @@
+SIMPLY COZY HOMES - FULL WEBSITE THEME (version 7)
+==================================================
+
+This is now a REAL multi-page website, not one file pretending to be four
+pages. Every page is its own .html file, which is what Netlify and Google
+both want.
+
+
+WHAT IS IN THIS FOLDER
+----------------------
+  index.html ................. Home page
+  blog.html .................. Blog listing (category buttons + search)
+  about.html ................. About Us
+  privacy.html ............... Privacy policy
+  404.html ................... Shown if someone visits a wrong address
+
+  ARTICLE PAGES (one file per blog post)
+  kitchen-tools-worth-buying.html
+  small-kitchen-storage.html
+  cotton-linen-or-microfibre.html
+  lighting-a-room-with-no-overhead-light.html
+  renter-friendly-wall-decor.html
+  thirty-minute-cleaning-kit.html
+
+  post-TEMPLATE.html ......... A blank article. COPY THIS to write a new one.
+
+  assets/css/styles.css ...... All colours, fonts and layout for every page
+  assets/js/main.js .......... Animations, mouse glow, back-to-top, blog filter
+  images/ .................... Every photo
+  sitemap.xml, robots.txt .... For Google
+
+
+HOW TO LOOK AT IT ON YOUR OWN COMPUTER
+--------------------------------------
+1. Right-click the zip -> "Extract All..." -> Extract.
+2. Open the extracted folder.
+3. Double-click index.html. It opens in your browser.
+4. Click around the menu. Click any article card on the Blog page - it now
+   opens a real article page.
+
+Do NOT type the file name into the browser address bar. Just double-click
+the file.
+
+
+HOW TO PUT IT ON NETLIFY
+------------------------
+1. Go to app.netlify.com and sign up (free).
+2. Click "Add new site" -> "Deploy manually".
+3. Drag the WHOLE extracted folder onto the box that says drop your site
+   folder here. Not the zip. Not the individual files. The folder.
+4. Netlify gives you an address like random-name-123.netlify.app.
+5. In Site configuration -> Change site name, rename it to something like
+   simplycozyhomes.netlify.app.
+
+When you change something later, drag the folder onto the same site again
+(Deploys tab -> "Deploy manually"). It replaces the old version.
+
+
+HOW TO ADD A NEW BLOG POST (this is the important one)
+-----------------------------------------------------
+STEP 1. Copy post-TEMPLATE.html and rename the copy. Use lowercase words
+        with dashes and no spaces, for example:
+            best-bath-towels.html
+        That file name becomes the web address, so keep it short and clear.
+
+STEP 2. Open your new file in Notepad (right-click -> Open with -> Notepad)
+        and fill in the parts written in CAPITAL LETTERS:
+            PUT YOUR ARTICLE TITLE HERE   (appears twice: title tag + heading)
+            YOUR FIRST HEADING            (and the second, third...)
+            PUT THE DATE HERE
+            PASTE YOUR AMAZON LINK HERE
+            REPLACE: images/post-1.jpg    (point it at your own photo)
+        Where it says WRITE MORE HERE, add as many lines as you want in this
+        shape:
+            <p>Your paragraph of text.</p>
+
+STEP 3. Tell the blog page the new article exists. Open blog.html, find the
+        line that says:
+            <div class="posts" id="blog-posts">
+        Copy any one of the six <article class="post" ...> blocks below it,
+        paste it directly underneath, then change in your copy:
+          - data-cat="kitchen"  -> the category (kitchen, storage, decor,
+                                   bedding, cleaning)
+          - href="..."          -> your new file name
+          - the badge, the read time, the title, the one-line summary
+          - the image file name
+
+STEP 4. Add the new address to sitemap.xml (one line, copy the shape of the
+        others). Optional but good for Google.
+
+That is the whole process. The category buttons and the search box pick up
+new articles automatically - you do not have to touch the code for those.
+
+
+HOW TO CHANGE COLOURS OR FONTS
+------------------------------
+Open assets/css/styles.css. The very top block is called YOUR SETTINGS.
+Change a colour there once and it changes on every page of the site.
+
+
+HOW TO SWAP A PHOTO
+-------------------
+Easiest way: put your photo in the images folder and give it the EXACT same
+name as the one you are replacing (for example images/hero.jpg). Nothing in
+the HTML needs to change.
+
+Sizes that look right:
+  hero.jpg .............. wide, about 1600 x 1000
+  product-1..6.jpg ...... square, about 800 x 800
+  post-1..6.jpg ......... wide, about 1200 x 800
+  about-wide.jpg ........ very wide, about 1600 x 900
+
+
+ONE FIND-AND-REPLACE TO DO AFTER YOU DEPLOY
+-------------------------------------------
+Every page contains the placeholder lustrous-lamington-190745.netlify.app. Once you know
+your real Netlify address, open each file in Notepad and use Edit -> Replace
+to swap lustrous-lamington-190745.netlify.app for your real address. Also do it in
+sitemap.xml and robots.txt. This only affects Google and social previews,
+not how the site looks.
+
+
+NOTES YOU CAN SEARCH FOR IN ANY FILE
+------------------------------------
+  CHANGE YOUR SITE NAME HERE
+  PASTE YOUR AMAZON LINK HERE
+  EDIT THESE THREE LABELS
+  REPLACE: images/<name>.jpg
+  WRITE MORE HERE
+  PUT THE DATE HERE
+  PUT THE PRODUCT NAME HERE
+
+
+WHAT IS STILL A PLACEHOLDER
+---------------------------
+1. Amazon links - every "See it on Amazon" button currently goes nowhere.
+2. Star ratings say "Add rating". Copy the real ones from Amazon.
+3. The three grey chips on each product card are my guesses.
+4. Your contact email. It says info@simplycozyhomes.com everywhere.
+5. All photos are stand-ins I generated.
+6. Article dates say "Coming soon".
+7. The six articles have real openings and headings, but each section is a
+   starting paragraph, not a finished article. Replace or extend them.
+
+
+TWO AMAZON RULES THAT MATTER
+----------------------------
+- Never type prices by hand. Prices change, and Amazon's terms forbid it.
+  That is why cards say "Live on Amazon".
+- Keep the "As an Amazon Associate..." line at the top of every page and the
+  longer paragraph in the footer. Amazon requires both.
+
+
+FONTS
+-----
+The two fonts load from Google Fonts, so the site needs internet to look
+exactly right. Offline it still works, just with a plainer font.
+
+>>> NEW: you do not need to read code to change your website. <<<
+>>> Double-click editor.html in this folder. Instructions are in <<<
+>>> EDITOR-HOW-TO.txt. Everything below is still true, and is for <<<
+>>> the deeper changes the editor does not cover.                <<<
+

@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Simply Cozy Homes — Section Editor</title>
+
+<!--
+  ==========================================================================
+  SECTION EDITOR  —  edit your website without touching code
+  ==========================================================================
+  Double-click this file. It opens in your browser.
+  It only ever changes the files in this folder on your own computer.
+  It is not part of your website and visitors never see it.
+  ==========================================================================
+-->
+
+<style>
+:root {
+	--bg: #17110F;
+	--panel: #221A17;
+	--panel-2: #2B211D;
+	--line: rgba(246,241,234,0.14);
+	--ink: #F6F1EA;
+	--soft: #B7ABA0;
+	--gold: #C9A86A;
+	--terracotta: #D07A50;
+	--green: #35564A;
+	--font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+}
+* { box-sizing: border-box; }
+body {
+	margin: 0; background: var(--bg); color: var(--ink);
+	font-family: var(--font); font-size: 14px;
+}
+h1, h2, h3 { margin: 0; font-weight: 600; }
+button { font-family: var(--font); cursor: pointer; }
+
+.top {
+	display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+	padding: 14px 20px; background: var(--panel); border-bottom: 1px solid var(--line);
+	position: sticky; top: 0; z-index: 20;
+}
+.top h1 { font-size: 15px; letter-spacing: 0.02em; }
+.top h1 small { display: block; font-size: 11px; color: var(--soft); font-weight: 400; letter-spacing: 0.06em; text-transform: uppercase; }
+.spacer { flex: 1; }
+
+.btn {
+	background: linear-gradient(120deg, var(--terracotta), #B9663D);
+	color: #fff; border: 0; border-radius: 8px; padding: 10px 16px;
+	font-size: 13px; font-weight: 600;
+}
+.btn:hover { filter: brightness(1.08); }
+.btn--ghost { background: transparent; border: 1px solid var(--line); color: var(--ink); }
+.btn--gold { background: linear-gradient(120deg, var(--gold), #A98849); color: #22190F; }
+.btn[disabled] { opacity: 0.4; cursor: not-allowed; }
+
+select, input[type="text"], textarea, input[type="search"] {
+	font-family: var(--font); font-size: 13px; color: var(--ink);
+	background: var(--panel-2); border: 1px solid var(--line);
+	border-radius: 8px; padding: 9px 11px; width: 100%;
+}
+textarea { resize: vertical; line-height: 1.55; }
+input:focus, textarea:focus, select:focus { outline: 2px solid var(--gold); outline-offset: 1px; }
+
+.layout { display: grid; grid-template-columns: 430px minmax(0, 1fr); height: calc(100vh - 59px); }
+.side { border-right: 1px solid var(--line); overflow-y: auto; padding: 16px 18px 150px; }
+.stage { background: #0F0B0A; overflow: hidden; position: relative; }
+.stage iframe { width: 100%; height: 100%; border: 0; background: #17110F; }
+.stage__hint {
+	position: absolute; left: 0; right: 0; bottom: 0; padding: 8px 14px;
+	background: rgba(0,0,0,0.65); color: var(--soft); font-size: 12px;
+}
+
+.start { padding: 26px; max-width: 640px; }
+.start h2 { font-size: 18px; margin-bottom: 8px; }
+.start p { color: var(--soft); line-height: 1.7; }
+.start ol { color: var(--soft); line-height: 1.8; padding-left: 20px; }
+.card {
+	background: var(--panel); border: 1px solid var(--line); border-radius: 12px;
+	padding: 18px 20px; margin: 16px 0;
+}
+.card h3 { font-size: 14px; margin-bottom: 8px; color: var(--gold); }
+
+.group { border: 1px solid var(--line); border-radius: 12px; margin-bottom: 12px; overflow: hidden; background: var(--panel); }
+.group__head {
+	width: 100%; text-align: left; background: transparent; border: 0; color: var(--ink);
+	padding: 13px 15px; font-size: 13px; font-weight: 600;
+	display: flex; align-items: center; gap: 10px;
+}
+.group__head:hover { background: rgba(255,255,255,0.04); }
+.group__count { color: var(--soft); font-weight: 400; font-size: 12px; }
+.group__arrow { margin-left: auto; color: var(--soft); }
+.group__body { padding: 4px 15px 15px; display: none; }
+.group.is-open .group__body { display: block; }
+
+.field { padding: 11px 0; border-top: 1px solid var(--line); }
+.field:first-child { border-top: 0; }
+.field__label { display: flex; align-items: center; gap: 8px; margin-bottom: 7px; }
+.chip {
+	font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase;
+	color: var(--gold); border: 1px solid rgba(201,168,106,0.4);
+	border-radius: 999px; padding: 3px 8px;
+}
+.field__sub { font-size: 11px; color: var(--soft); margin: 6px 0 4px; }
+.field__row { display: grid; gap: 8px; }
+.thumb {
+	width: 100%; height: 120px; object-fit: cover; border-radius: 8px;
+	border: 1px solid var(--line); background: var(--panel-2); display: block; margin-bottom: 8px;
+}
+.status { font-size: 12px; color: var(--soft); }
+.status b { color: var(--gold); font-weight: 600; }
+.savebar {
+	position: sticky; bottom: 0; margin: 0 -18px -150px; padding: 14px 18px;
+	background: linear-gradient(180deg, rgba(23,17,15,0), var(--bg) 40%);
+	display: flex; gap: 10px; align-items: center;
+}
+.warn { color: #E4A17A; }
+.hide { display: none !important; }
+</style>
+</head>
+<body>
+
+<div class="top">
+	<h1>Section Editor<small>Simply Cozy Homes</small></h1>
+	<div id="filebar" class="hide" style="display:flex;gap:10px;align-items:center;min-width:260px">
+		<select id="filepick" aria-label="Which page"></select>
+	</div>
+	<div class="spacer"></div>
+	<span id="status" class="status"></span>
+	<button id="savebtn" class="btn" disabled>Save changes</button>
+</div>
+
+<!-- ===================== WELCOME SCREEN ===================== -->
+<div id="start" class="start">
+	<h2>Edit your website without touching code</h2>
+	<p>Pick a page below. This tool shows every heading, paragraph, button and photo
+	on that page as a simple box you can type into, with a live preview on the right.</p>
+
+	<div class="card">
+		<h3>Option A &mdash; the easy way (Chrome or Edge)</h3>
+		<p>Choose this folder once, then edit any page and click Save. Your files are
+		updated in place, exactly like editing a document.</p>
+		<p><button id="pickfolder" class="btn btn--gold">Choose my website folder</button></p>
+		<p class="status">Choose the folder that contains index.html. Your browser will
+		ask once for permission to save into it. Nothing leaves your computer.</p>
+	</div>
+
+	<div class="card">
+		<h3>Option B &mdash; if the button above does nothing</h3>
+		<p>Open one page at a time. When you are done, the edited page downloads to
+		your Downloads folder and you copy it back over the old one.</p>
+		<p><input type="file" id="pickfile" accept=".html,.htm" /></p>
+	</div>
+
+	<div class="card">
+		<h3>Good to know</h3>
+		<ol>
+			<li>This tool never touches the live website. You still upload the folder to Netlify afterwards.</li>
+			<li>Nothing is saved until you click <b>Save changes</b>.</li>
+			<li>To swap a photo, use the Photo box on the field &mdash; in Option A you can upload straight from here.</li>
+			<li>Keep a spare copy of the folder before your first edit, just in case.</li>
+		</ol>
+	</div>
+</div>
+
+<!-- ===================== EDITOR ===================== -->
+<div id="editor" class="layout hide">
+	<div class="side">
+		<div style="margin-bottom:12px">
+			<input type="search" id="filter" placeholder="Find text on this page..." autocomplete="off" />
+		</div>
+		<div id="groups"></div>
+		<div class="savebar">
+			<button id="savebtn2" class="btn">Save changes</button>
+			<button id="backbtn" class="btn btn--ghost">Open another page</button>
+		</div>
+	</div>
+	<div class="stage">
+		<iframe id="preview" title="Live preview"></iframe>
+		<div class="stage__hint" id="hint">Click a box on the left and the matching part of the page is outlined here.</div>
+	</div>
+</div>
+
+<script src="assets/js/editor.js"></script>
+<script>
+(function () {
+	"use strict";
+
+	var PAGES = ["index.html", "blog.html", "about.html", "faq.html",
+		"contact.html", "how-we-test.html", "affiliate-disclosure.html",
+		"privacy.html", "terms.html", "404.html"];
+
+	var state = {
+		mode: null,          /* "folder" | "file" */
+		dirHandle: null,
+		fileHandle: null,
+		fileName: "",
+		doc: null,
+		fields: [],
+		byId: {},
+		dirty: false
+	};
+
+	var $ = function (id) { return document.getElementById(id); };
+	var baseHref = location.href.replace(/[^/]*$/, "");
+
+	function setStatus(text, warn) {
+		$("status").innerHTML = text;
+		$("status").className = warn ? "status warn" : "status";
+	}
+
+	function markDirty(on) {
+		state.dirty = on;
+		$("savebtn").disabled = !on;
+		if (on) { setStatus("Unsaved changes", true); }
+	}
+
+	/* ---------------------------------------------------------------- open */
+
+	async function chooseFolder() {
+		if (!window.showDirectoryPicker) {
+			alert("Your browser cannot do it this way. Use Option B underneath instead.");
+			return;
+		}
+		try {
+			state.dirHandle = await window.showDirectoryPicker({ mode: "readwrite" });
+		} catch (err) { return; }
+
+		/* list every html file in the folder, real pages first */
+		var found = [];
+		for await (var entry of state.dirHandle.values()) {
+			if (entry.kind === "file" && /\.html?$/i.test(entry.name) && entry.name !== "editor.html") {
+				found.push(entry.name);
+			}
+		}
+		if (!found.length) {
+			alert("That folder has no web pages in it. Choose the folder that contains index.html.");
+			return;
+		}
+		found.sort(function (a, b) {
+			var ia = PAGES.indexOf(a), ib = PAGES.indexOf(b);
+			if (ia !== -1 || ib !== -1) { return (ia === -1 ? 99 : ia) - (ib === -1 ? 99 : ib); }
+			return a.localeCompare(b);
+		});
+
+		state.mode = "folder";
+		var pick = $("filepick");
+		pick.innerHTML = found.map(function (n) { return '<option value="' + n + '">' + n + "</option>"; }).join("");
+		$("filebar").classList.remove("hide");
+		await openFromFolder(found[0]);
+	}
+
+	async function openFromFolder(name) {
+		try {
+			var handle = await state.dirHandle.getFileHandle(name);
+			var file = await handle.getFile();
+			state.fileHandle = handle;
+			state.fileName = name;
+			load(await file.text());
+		} catch (err) {
+			alert("Could not read " + name + " from that folder.\n\n" +
+				"Reason: " + (err && err.message ? err.message : String(err)));
+			setStatus("Could not read " + name, true);
+		}
+	}
+
+	function chooseFile(input) {
+		var file = input.files && input.files[0];
+		if (!file) { return; }
+		state.mode = "file";
+		state.fileName = file.name;
+		var reader = new FileReader();
+		reader.onload = function () { load(String(reader.result)); };
+		reader.readAsText(file);
+	}
+
+	/* ---------------------------------------------------------------- build */
+
+	function load(text) {
+		/* If the engine file is missing, say so in plain words instead of
+		   doing nothing at all. */
+		if (!window.SCE) {
+			alert("The editor engine is missing.\n\n" +
+				"Check that this file exists next to editor.html:\n" +
+				"    assets/js/editor.js\n\n" +
+				"Without it the editor cannot open any page.");
+			setStatus("Missing file: assets/js/editor.js", true);
+			return;
+		}
+
+		try {
+			state.doc = window.SCE.parseHtml(text);
+			state.fields = window.SCE.collectFields(state.doc);
+			state.byId = {};
+			state.fields.forEach(function (f) { state.byId[f.id] = f; });
+
+			$("start").classList.add("hide");
+			$("editor").classList.remove("hide");
+			renderGroups("");
+			renderPreview();
+			markDirty(false);
+			setStatus("Editing <b>" + state.fileName + "</b> — " + state.fields.length + " editable pieces");
+		} catch (err) {
+			alert("Could not open " + (state.fileName || "that page") + ".\n\n" +
+				"Reason: " + (err && err.message ? err.message : String(err)) + "\n\n" +
+				"Try another page from the drop-down list.");
+			setStatus("Could not open " + (state.fileName || "that page"), true);
+		}
+	}
+
+	function esc(s) {
+		return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+	}
+
+	function renderGroups(term) {
+		var groups = window.SCE.groupFields(state.fields);
+		var low = term.toLowerCase();
+		var html = "";
+		var shown = 0;
+
+		groups.forEach(function (g, gi) {
+			var rows = g.fields.filter(function (f) {
+				if (!low) { return true; }
+				var hay = (window.SCE.plain(f.value || "") + " " + (f.src || "") + " " + (f.alt || "") + " " + g.name).toLowerCase();
+				return hay.indexOf(low) !== -1;
+			});
+			if (!rows.length) { return; }
+			shown += rows.length;
+
+			var open = low ? " is-open" : (gi === 0 ? " is-open" : "");
+			html += '<div class="group' + open + '" data-group="' + gi + '">';
+			html += '<button class="group__head" type="button">' + esc(g.name) +
+				' <span class="group__count">' + rows.length + " items</span>" +
+				'<span class="group__arrow">&#9662;</span></button>';
+			html += '<div class="group__body">';
+
+			rows.forEach(function (f) {
+				html += '<div class="field" data-field="' + f.id + '">';
+				html += '<div class="field__label"><span class="chip">' + esc(f.label) + "</span></div>";
+
+				if (f.type === "image") {
+					html += '<img class="thumb" src="' + esc(f.src) + '" alt="" />';
+					html += '<div class="field__row">';
+					html += '<div><div class="field__sub">Photo file (inside the images folder)</div>' +
+						'<input type="text" data-part="src" value="' + esc(f.src) + '" /></div>';
+					html += '<div><div class="field__sub">Describe the photo (helps Google)</div>' +
+						'<input type="text" data-part="alt" value="' + esc(f.alt) + '" /></div>';
+					if (state.mode === "folder") {
+						html += '<div><div class="field__sub">Or upload a photo from your computer</div>' +
+							'<input type="file" data-part="upload" accept="image/*" /></div>';
+					}
+					html += "</div>";
+				} else {
+					var len = (f.value || "").length;
+					var rowsCount = len > 260 ? 6 : (len > 90 ? 4 : (len > 34 ? 2 : 1));
+					html += '<textarea rows="' + rowsCount + '" data-part="value">' + esc(f.value || "") + "</textarea>";
+					if (f.href !== undefined) {
+						html += '<div class="field__sub">Where this link goes</div>' +
+							'<input type="text" data-part="href" value="' + esc(f.href) + '" />';
+					}
+				}
+				html += "</div>";
+			});
+
+			html += "</div></div>";
+		});
+
+		if (!shown) { html = '<p class="status">Nothing on this page matches that.</p>'; }
+		$("groups").innerHTML = html;
+	}
+
+	/* ---------------------------------------------------------------- preview */
+
+	function renderPreview() {
+		$("preview").srcdoc = window.SCE.previewHtml(state.doc, baseHref);
+	}
+
+	function previewDoc() {
+		try { return $("preview").contentDocument; } catch (err) { return null; }
+	}
+
+	function syncPreview(field) {
+		var pdoc = previewDoc();
+		if (!pdoc) { return; }
+		var node = pdoc.querySelector('[data-sce-id="' + field.id + '"]');
+		if (!node) { return; }
+		if (field.type === "image") {
+			node.setAttribute("src", field.src);
+			node.setAttribute("alt", field.alt);
+		} else if (field.type === "placeholder") {
+			node.setAttribute("placeholder", field.value);
+		} else {
+			node.innerHTML = field.value;
+			if (field.href !== undefined) { node.setAttribute("href", field.href); }
+		}
+	}
+
+	function highlight(field) {
+		var pdoc = previewDoc();
+		if (!pdoc) { return; }
+		var old = pdoc.querySelectorAll("[data-sce-hot]");
+		var n;
+		for (n = 0; n < old.length; n++) { old[n].removeAttribute("data-sce-hot"); }
+		var node = pdoc.querySelector('[data-sce-id="' + field.id + '"]');
+		if (!node) { return; }
+		node.setAttribute("data-sce-hot", "1");
+		node.scrollIntoView({ block: "center" });
+	}
+
+	/* ---------------------------------------------------------------- save */
+
+	async function save() {
+		var out = window.SCE.serialize(state.doc);
+		if (state.mode === "folder" && state.fileHandle) {
+			try {
+				var writable = await state.fileHandle.createWritable();
+				await writable.write(out);
+				await writable.close();
+				markDirty(false);
+				setStatus("Saved <b>" + state.fileName + "</b>");
+				return;
+			} catch (err) {
+				alert("Could not save into the folder. The edited page will download instead.");
+			}
+		}
+		var blob = new Blob([out], { type: "text/html" });
+		var link = document.createElement("a");
+		link.href = URL.createObjectURL(blob);
+		link.download = state.fileName || "page.html";
+		link.click();
+		URL.revokeObjectURL(link.href);
+		markDirty(false);
+		setStatus("Downloaded <b>" + state.fileName + "</b> — copy it over the old file");
+	}
+
+	async function uploadPhoto(field, file, input) {
+		var name = file.name.toLowerCase().replace(/[^a-z0-9.-]+/g, "-");
+		try {
+			var imagesDir = await state.dirHandle.getDirectoryHandle("images", { create: true });
+			var handle = await imagesDir.getFileHandle(name, { create: true });
+			var writable = await handle.createWritable();
+			await writable.write(await file.arrayBuffer());
+			await writable.close();
+		} catch (err) {
+			alert("Could not copy the photo into the images folder. Put it there yourself, then type its file name in the box above.");
+			return;
+		}
+		window.SCE.applyField(field, { src: "images/" + name });
+		var row = input.closest(".field");
+		row.querySelector('[data-part="src"]').value = field.src;
+		row.querySelector(".thumb").src = field.src + "?" + Date.now();
+		syncPreview(field);
+		markDirty(true);
+		setStatus("Photo copied into images/" + name + " — remember to Save", true);
+	}
+
+	/* ---------------------------------------------------------------- wiring */
+
+	$("pickfolder").addEventListener("click", chooseFolder);
+	$("pickfile").addEventListener("change", function () { chooseFile(this); });
+	$("savebtn").addEventListener("click", save);
+	$("savebtn2").addEventListener("click", save);
+	$("filter").addEventListener("input", function () { renderGroups(this.value); });
+
+	$("filepick").addEventListener("change", async function () {
+		if (state.dirty && !confirm("You have unsaved changes. Leave them behind?")) {
+			this.value = state.fileName;
+			return;
+		}
+		await openFromFolder(this.value);
+	});
+
+	$("backbtn").addEventListener("click", function () {
+		if (state.dirty && !confirm("You have unsaved changes. Leave them behind?")) { return; }
+		$("editor").classList.add("hide");
+		$("start").classList.remove("hide");
+		markDirty(false);
+		setStatus("");
+	});
+
+	/* one handler for every box in the form */
+	$("groups").addEventListener("input", function (event) {
+		var part = event.target.getAttribute && event.target.getAttribute("data-part");
+		if (!part || part === "upload") { return; }
+		var row = event.target.closest(".field");
+		var field = state.byId[row.getAttribute("data-field")];
+		var patch = {};
+		patch[part] = event.target.value;
+		window.SCE.applyField(field, patch);
+		if (part === "src") { row.querySelector(".thumb").src = field.src; }
+		syncPreview(field);
+		markDirty(true);
+	});
+
+	$("groups").addEventListener("change", function (event) {
+		if (event.target.getAttribute && event.target.getAttribute("data-part") === "upload") {
+			var row = event.target.closest(".field");
+			var field = state.byId[row.getAttribute("data-field")];
+			if (event.target.files && event.target.files[0]) {
+				uploadPhoto(field, event.target.files[0], event.target);
+			}
+		}
+	});
+
+	$("groups").addEventListener("focusin", function (event) {
+		var row = event.target.closest && event.target.closest(".field");
+		if (!row) { return; }
+		var field = state.byId[row.getAttribute("data-field")];
+		if (field) { highlight(field); }
+	});
+
+	$("groups").addEventListener("click", function (event) {
+		var head = event.target.closest && event.target.closest(".group__head");
+		if (head) { head.parentNode.classList.toggle("is-open"); }
+	});
+
+	window.addEventListener("beforeunload", function (event) {
+		if (state.dirty) { event.preventDefault(); event.returnValue = ""; }
+	});
+
+	/* hide Option A on browsers that cannot do it */
+	if (!window.showDirectoryPicker) {
+		$("pickfolder").disabled = true;
+		$("pickfolder").textContent = "Not supported in this browser — use Option B";
+	}
+
+	/* testing hook: editor.html?dev=index.html (only works from a local server) */
+	(function () {
+		var m = /[?&]dev=([^&]+)/.exec(location.search);
+		if (!m) { return; }
+		state.mode = "file";
+		state.fileName = decodeURIComponent(m[1]);
+		fetch(state.fileName).then(function (r) { return r.text(); }).then(load).catch(function () {});
+	})();
+})();
+</script>
+</body>
+</html>
