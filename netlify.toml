@@ -1,0 +1,47 @@
+# ==========================================================================
+#  Simply Cozy Homes - Netlify configuration
+# ==========================================================================
+#  This file is read automatically by Netlify when you deploy. You do not
+#  need to open it again unless your domain changes.
+# ==========================================================================
+
+[build]
+  # Nothing to build. This is a plain HTML site, so Netlify just publishes
+  # the folder as-is.
+  publish = "."
+
+# --------------------------------------------------------------------------
+#  Force one version of the domain.
+#  Google treats simplycozyhomes.com and www.simplycozyhomes.com as two
+#  different sites unless you pick one. We send everything to the www
+#  version, because that is what the canonical tags on every page say.
+# --------------------------------------------------------------------------
+[[redirects]]
+  from = "https://simplycozyhomes.com/*"
+  to = "https://www.simplycozyhomes.com/:splat"
+  status = 301
+  force = true
+
+# --------------------------------------------------------------------------
+#  Security and privacy headers. These do not change how the site looks.
+# --------------------------------------------------------------------------
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "SAMEORIGIN"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "geolocation=(), microphone=(), camera=()"
+
+# --------------------------------------------------------------------------
+#  Let browsers cache images and styles so repeat visits load faster.
+# --------------------------------------------------------------------------
+[[headers]]
+  for = "/images/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000"
+
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=604800"

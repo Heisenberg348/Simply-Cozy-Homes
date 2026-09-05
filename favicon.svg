@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Simply Cozy Homes">
+  <rect width="64" height="64" rx="14" fill="#7a5c3e"/>
+  <path d="M14 31 32 16l18 15v17a2 2 0 0 1-2 2H16a2 2 0 0 1-2-2V31Z" fill="#f6efe4"/>
+  <path d="M32 13.5 52.5 31a1.8 1.8 0 0 1-2.3 2.7L32 18.4 13.8 33.7A1.8 1.8 0 0 1 11.5 31L32 13.5Z" fill="#c9a15f"/>
+  <path d="M27 50V38.5a5 5 0 0 1 10 0V50Z" fill="#7a5c3e"/>
+</svg>
