@@ -1,9 +1,0 @@
-User-agent: *
-Allow: /
-
-# Local editing tool and the blank article template - no reason for Google
-# to index these.
-Disallow: /editor.html
-Disallow: /post-TEMPLATE.html
-
-Sitemap: https://lustrous-lamington-190745.netlify.app/sitemap.xml
